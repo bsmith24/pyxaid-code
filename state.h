@@ -63,8 +63,10 @@ public:
 };
 
 
-void input_iconds(boost::python::dict params,int me_numstates,vector<vector<int> >& icond);
-void input_states(boost::python::dict params,vector<me_state>& states);
+//void input_iconds(boost::python::dict params,int me_numstates,vector<vector<int> >& icond);
+//void input_states(boost::python::dict params,vector<me_state>& states);
+void input_iconds(int me_numstates,vector<vector<int> >& icond);
+void input_states(vector<me_state>& states);
 
 
 

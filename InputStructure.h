@@ -79,7 +79,7 @@ public:
 
 
   // Constructor
-  InputStructure(boost::python::dict);
+  InputStructure( );
 
 };
 

@@ -32,12 +32,14 @@ namespace mpi
    char **argv;
 }
 
-int namd(boost::python::dict inp_params){
-
+// No python driver so namd() becomes main()
+//int namd(boost::python::dict inp_params){
+int main( int argc, char **argv )
+{
   clock_t t_namd = clock();
   complex<double> ihbar(0.0,hbar);
 
-  Timer timer("Total: namd function");
+  Timer timer("Total - Main()");
 
   //MPI_Init(NULL, NULL );
   MPI_Init( &mpi::argc, &mpi::argv );
@@ -47,12 +49,16 @@ int namd(boost::python::dict inp_params){
 
 //>>>>>>>>>>>>>>>>>>>>>>>> INITIALIZATION PART <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
-  // General input parameters from the python dictionary
-  InputStructure params(inp_params);
+  vector< vector<int> > iconds; // iconds[j][0] = init_time[j], iconds[j][1] = init_state[j]
+
+  // Read input parameters through stdin from an input file
+  //InputStructure params( me_states, iconds );
+  InputStructure params( );
+  exit(0);
 
   // Define ME basis
   vector<me_state> me_states;
-  input_states(inp_params,me_states); // Convention will be to count from 1, where 1 - is the first orbital from input
+  input_states(me_states); // Convention will be to count from 1, where 1 - is the first orbital from input
                                       // (real and energy files), not necessarily the actual first orbital of the system
 
   int me_numstates = me_states.size();               // This is a number of true (multi-electron) states to propagate
@@ -68,7 +74,7 @@ int namd(boost::python::dict inp_params){
 
   // icond loop - from the input dictionary
   vector< vector<int> > iconds; // iconds[j][0] = init_time[j], iconds[j][1] = init_state[j]
-  input_iconds(inp_params,me_numstates,iconds);
+  input_iconds(me_numstates,iconds);
 
   // Set the unit conversion factor 
   double en_scl = 1.0;

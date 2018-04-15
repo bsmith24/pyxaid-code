@@ -147,7 +147,9 @@ int list2state(boost::python::list lst,vector<int>& active_space, me_state& ES){
 }
 
 
-void input_states(boost::python::dict params,vector<me_state>& states){
+//void input_states(boost::python::dict params,vector<me_state>& states){
+// DDT - MPI version will input states through stdin from an input file
+void input_states(vector<me_state>& states){
 // States are defined as a list in a dictionary with a key "states"
 // For example:
 // params["states"] = []

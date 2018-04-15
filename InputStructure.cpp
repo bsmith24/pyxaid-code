@@ -166,9 +166,11 @@ void InputStructure::set_default(){
 
 }
 
-// DaveTurner - Read input parameters from stdin instead of a calling python script
+// DaveTurner - Read input parameters through stdin from an input file 
+//              instead of using boost and parameters passed from the python driver
 
-InputStructure::ReadStructure( )
+//InputStructure::InputStructure(vector<me_state> me_states, vector< vector<int> > iconds )
+InputStructure::InputStructure( )
 {
   init();
 
@@ -193,9 +195,9 @@ InputStructure::ReadStructure( )
     key = line.substr(0, pos-1);
     value = line.substr( pos + 1 );
 
-    if(key=="energy_units"){ energy_units = value; is_energy_units = 1; }
+    if(key=="basedir"){ basedir = value;  is_Ham_re_prefix = 1; }
 
-    else if(key=="basedir"){ basedir = value;  is_Ham_re_prefix = 1; }
+    else if(key=="energy_units"){ energy_units = value; is_energy_units = 1; }
     else if(key=="Ham_re_prefix"){ Ham_re_prefix = basedir + value;  is_Ham_re_prefix = 1; }
     else if(key=="Ham_re_suffix"){ Ham_re_suffix = value;  is_Ham_re_suffix = 1; }
     else if(key=="Ham_im_prefix"){ Ham_im_prefix = basedir + value;  is_Ham_im_prefix = 1; }
@@ -252,7 +254,7 @@ InputStructure::ReadStructure( )
   sanity_check();
 }
 
-InputStructure::InputStructure(boost::python::dict params){
+InputStructure::oldInputStructure(boost::python::dict params){
   init();
   boost::python::list lkeys = params.keys();
 

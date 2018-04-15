@@ -13,6 +13,7 @@ input_filename = sys.argv[2]
 
 fo = open( input_filename, "w" )
 fo.write( "# NOTE:  You may need to delete some junk python lines in this file\n")
+fo.write( "# NOTE:  If you define a base directory for Ham and Hprime, include a 'basedir =' line first\n")
 
 fi = open( python_script, "r" )
 
@@ -34,12 +35,12 @@ for lcount, line in enumerate( fi ):
    elif( "=" in line ) : 
 
       line = re.sub( r' ', "", line)     # Remove spaces
-      param_obj = re.search( r'\S+[\[]+(\S+)[\]]+=([^$]+)', line )
+      param_obj = re.search( r'\S+[\[]+(\S+)[\]]+=([^$]+)', line ) # Get key and value
       if( param_obj ) :
          key   = re.sub( r'\"', "", param_obj.group(1) )
          value = re.sub( r'\"', "", param_obj.group(2) )
+         value = re.sub( r'\S+\+', "", value)         # Remove basedir+ for Ham and Hprime
          value = re.sub( r'[\[\],]', " ", value)      # Delimit with spaces
-         value = re.sub( r'\+', " + ", value)
 
          if( "iconds" in key ) :
             fo.write( "# NOTE: Set icond_max and nmicrost variables below\n")

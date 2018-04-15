@@ -1,8 +1,8 @@
 # Do 'module load module load Boost/1.63.0-foss-2017beocatb-Python-2.7.13' first
 
-FLAGS= -fno-for-scope -g -O2 -fPIC
+FLAGS= -fno-for-scope -g -O2 -fPIC -std=c++98
 #CPP=c++
-CPP=mpic++
+CPP=mpicc
 # BOOST
 # UB CCR
 #p1=/util/academic/boost/v1.57.0/include/boost
@@ -19,8 +19,12 @@ pl2=/usr/lib
 
 I=-I ${p1} -I ${p2}
 L=-L ${pl1} -L ${pl2}
+# Python and Boost not needed for C++ MPI version
+#I=
+#L=
 
-all: pyxaid_core.so
+#all: pyxaid_core.so
+all: pyxaid
 
 mytimer.o: mytimer.c mytimer_cpp.h
 	${CPP} ${FLAGS} ${I} -c mytimer.c
@@ -68,6 +72,14 @@ pyxaid_core.o: pyxaid_core.cpp
 	${CPP} ${FLAGS} ${I} -c pyxaid_core.cpp
 
 
+pyxaid: pyxaid_core.o wfc_export.o wfc_functions.o wfc_QE_methods.o wfc_basic_methods.o \
+        aux.o matrix.o state.o ElectronicStructure.o namd.o namd_export.o \
+		  InputStructure.o io.o random.o mytimer.o
+	${CPP} ${FLAGS} ${I} -o pyxaid pyxaid_core.o wfc_export.o wfc_functions.o \
+        wfc_QE_methods.o wfc_basic_methods.o aux.o matrix.o state.o ElectronicStructure.o\
+        namd.o namd_export.o InputStructure.o io.o random.o mytimer.o
+	cp pyxaid ..
+
 
 pyxaid_core.so: pyxaid_core.o wfc_export.o wfc_functions.o wfc_QE_methods.o wfc_basic_methods.o \
         aux.o matrix.o state.o ElectronicStructure.o namd.o namd_export.o InputStructure.o io.o random.o mytimer.o
@@ -78,7 +90,9 @@ pyxaid_core.so: pyxaid_core.o wfc_export.o wfc_functions.o wfc_QE_methods.o wfc_
 #        namd_export.o InputStructure.o io.o random.o ${L} -lboost_python-2.7
 
 clean:
-	rm *.o
-	rm pyxaid_core.so
-	rm ../pyxaid_core.so
+	rm -f *.o
+	rm -f pyxaid
+
+#rm pyxaid_core.so
+#rm ../pyxaid_core.so
 
